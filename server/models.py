@@ -1,6 +1,7 @@
-from flask_sqlalchemy import SQLAlchemy
+from flask_sqlalchemy  import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Text, ForeignKey, TIMESTAMP
 from sqlalchemy.orm import relationship
+from datetime import datetime
 import uuid
 
 db = SQLAlchemy()
@@ -24,24 +25,27 @@ class User(db.Model):
 class Entry(db.Model):
     __tablename__ = 'entries'
 
-    id = Column(Integer, primary_key=True)
-    user_id = db.Column(Integer, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    id = Column(String, primary_key=True)
+    user_id = db.Column(String, ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
     title = db.Column(String(255), nullable=False)
-    content = db.Column(Text, nullable=False)
+    content = db.Column(String, nullable=False)
     category = db.Column(String(50))
-    created_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp())
-    updated_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
-
+    created_at = db.Column(db.DateTime, nullable=False,
+                           default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, nullable=False,
+                           default=datetime.utcnow)
     # Optional relationship back to the user
     user = relationship("User", back_populates="entries")
 
-    class Category(db.Model):
-          __tablename__ = 'categories'
+class Category(db.Model):
+        __tablename__ = 'categories'
 
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), unique=True, nullable=False)
-    created_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp())
-    updated_at = db.Column(db.TIMESTAMP, nullable=False, server_default=db.func.current_timestamp(), onupdate=db.func.current_timestamp())
+        id = db.Column(db.Integer, primary_key=True)
+        name = db.Column(db.String(50), unique=True, nullable=False)
+        created_at = db.Column(db.DateTime, nullable=False,
+                           default=datetime.utcnow)
+        updated_at = db.Column(db.DateTime, nullable=False,
+                           default=datetime.utcnow)
 
 class TokenBlocklist(db.Model):
     __tablename__ = 'tokenblocklist'
