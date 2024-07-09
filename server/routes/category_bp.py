@@ -68,7 +68,4 @@ class CategoryById(Resource):
 api.add_resource(Category, '/category')
 api.add_resource(CategoryById, '/category/<string:id>')
 
-# Create: POST
-# Read: GET
-# Update: PUT/PATCH
-# Delete: DELETE
+#####
